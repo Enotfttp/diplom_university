@@ -3,28 +3,31 @@ import { GridColDef } from "@mui/x-data-grid";
 import React from "react";
 import TableData from "../../UI/Table/TableData";
 import {
-  addAirline,
-  deleteAirline,
-  editAirline,
-  getAirlines,
-} from "../../controllers/AirlinesController";
-import { convertDateToString, dateConverter } from "../../utills/dateUtills";
+  addKindergarten,
+  deleteKindergarten,
+  editKindergarten,
+  getKindergartens,
+} from "../../controllers/KindergartenController";
 import Header from "../Header/Header";
-import styles from "./Airlines.module.sass";
+import styles from "./Kindergartens.module.sass";
 
 const columns: GridColDef[] = [
-  { field: "nameCompany", headerName: "Name Company", type: "string" },
-  { field: "createYears", headerName: "Create Years", type: "date" },
-  { field: "countPlanes", headerName: "Count Planes", type: "number" },
+  {
+    field: "name_kindergarten",
+    headerName: "Name Kindergarten",
+    type: "string",
+  },
+  { field: "id_order", headerName: "Number Order", type: "number" },
+  { field: "name_status", headerName: "Name Status", type: "string" },
 ];
 
-const Airlines: React.FC = () => {
+const Kindergartens: React.FC = () => {
   const [data, setData] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [id, setId] = React.useState<string | undefined>(undefined);
   const [editData, setEditData] = React.useState<any>(null);
   const fetchData = React.useCallback(async () => {
-    const dataTable = await getAirlines();
+    const dataTable = await getKindergartens();
     if (dataTable.length) {
       setData(dataTable);
     } else {
@@ -42,23 +45,14 @@ const Airlines: React.FC = () => {
   }, []);
 
   const handleAdd = React.useCallback(async (data: any) => {
-    const dataTable = await addAirline(
-      data.nameCompany,
-      convertDateToString(data.createYears),
-      data.countPlanes
-    );
+    const dataTable = await addKindergarten(data.name_kindergarten);
     setData(dataTable);
     setOpen(false);
   }, []);
 
   const handleEdit = React.useCallback(
     (data: any) => {
-      editAirline(
-        data.id,
-        data.nameCompany,
-        convertDateToString(data.createYears),
-        data.countPlanes
-      );
+      editKindergarten(data.id, data.name_kindergarten);
       fetchData();
       setOpen(false);
     },
@@ -67,7 +61,7 @@ const Airlines: React.FC = () => {
 
   const handleDelete = React.useCallback(async () => {
     if (id) {
-      const data = await deleteAirline(id);
+      const data = await deleteKindergarten(id);
       await fetchData();
       if (data) setOpen(false);
     }
@@ -80,7 +74,7 @@ const Airlines: React.FC = () => {
   return (
     <>
       <Header />
-      <h2 className={styles.airlines_title}>Airlines</h2>
+      <h2 className={styles.airlines_title}>Kindergartens</h2>
       <TableData
         columns={columns}
         openModal={open}
@@ -99,15 +93,13 @@ const Airlines: React.FC = () => {
                 handleOpen(row.id);
                 handleSetCurrentData(row);
               }}>
-              <TableCell align="left">{row.nameCompany}</TableCell>
-              <TableCell align="left">
-                {dateConverter(row.createYears, "date")}
-              </TableCell>
-              <TableCell align="left">{row.countPlanes}</TableCell>
+              <TableCell align="left">{row.name_kindergarten}</TableCell>
+              <TableCell align="left">{row.id_order || ""}</TableCell>
+              <TableCell align="left">{row.name_status || ""}</TableCell>
             </TableRow>
           ))}
       </TableData>
     </>
   );
 };
-export default Airlines;
+export default Kindergartens;

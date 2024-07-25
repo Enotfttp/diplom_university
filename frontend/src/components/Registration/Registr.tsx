@@ -22,6 +22,7 @@ const Registr: React.FC = () => {
   const [repeatPassword, setRepeatPassword] = React.useState<string>("");
   const [fio, setFIO] = React.useState("");
   const [phoneNumber, setPhoneNumber] = React.useState<number>(0);
+  const [kindergarten, setKindergarten] = React.useState<string>("");
   const [error, setError] = React.useState<string | null>(null);
 
   const handleClickShowPassword = React.useCallback(() => {
@@ -47,6 +48,13 @@ const Registr: React.FC = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const target = event.target as HTMLInputElement;
       setPhoneNumber(Number(target.value || ""));
+    },
+    []
+  );
+  const handleKindergarten = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const target = event.target as HTMLInputElement;
+      setKindergarten(target.value);
     },
     []
   );
@@ -76,7 +84,7 @@ const Registr: React.FC = () => {
   );
 
   const handleSingUp = React.useCallback(async () => {
-    const data = await signUp(fio, phoneNumber, login, password);
+    const data = await signUp(fio, phoneNumber, login, password, kindergarten);
     if (typeof data === "object") {
       localStorage.setItem("login", login);
       localStorage.setItem("password", password);
@@ -84,12 +92,13 @@ const Registr: React.FC = () => {
       return;
     }
     setError(data);
-  }, [fio, login, navigate, password, phoneNumber]);
+  }, [fio, login, navigate, password, phoneNumber, kindergarten]);
 
   React.useEffect(() => {
     if (password !== repeatPassword) setError("Введеные пароли не совпадают");
+    else if (!kindergarten) setError("Введите название садика");
     else setError(null);
-  }, [password, repeatPassword]);
+  }, [password, repeatPassword, kindergarten]);
 
   return (
     <form className={styles.registr_form}>
@@ -116,6 +125,19 @@ const Registr: React.FC = () => {
           autoComplete="off"
           onChange={handlePhoneNumber}
           value={phoneNumber || ""}
+        />
+      </FormControl>
+      <FormControl sx={{ m: 1, width: "50ch" }} variant="outlined">
+        <InputLabel htmlFor="outlined-adornment-password">
+          Kindergarten
+        </InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-password"
+          type="text"
+          label="Kindergarten"
+          autoComplete="off"
+          onChange={handleKindergarten}
+          value={kindergarten}
         />
       </FormControl>
       <FormControl sx={{ m: 1, width: "50ch" }} variant="outlined">
@@ -182,7 +204,13 @@ const Registr: React.FC = () => {
           sx={{ width: "25ch" }}
           onClick={handleSingUp}
           disabled={
-            !fio || !login || !password || !phoneNumber || !repeatPassword
+            !fio ||
+            !login ||
+            !password ||
+            !phoneNumber ||
+            !repeatPassword ||
+            !kindergarten ||
+            !!error
           }>
           SIGN UP
         </Button>

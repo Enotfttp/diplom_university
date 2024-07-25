@@ -40,7 +40,7 @@ const TableData: React.FC<ITable> = ({
 
   return (
     <div>
-      {roles.dispatcher !== localStorage.getItem("role") &&
+      {roles.admin === localStorage.getItem("role") &&
         typeof handleAdd === "function" && (
           <div className={styles.add_btn}>
             <Button
@@ -72,7 +72,7 @@ const TableData: React.FC<ITable> = ({
           <TableBody>{children}</TableBody>
         </Table>
       </TableContainer>
-      {roles.dispatcher !== localStorage.getItem("role") && (
+      {roles.admin === localStorage.getItem("role") && (
         <>
           <MiniModal
             open={openModal}

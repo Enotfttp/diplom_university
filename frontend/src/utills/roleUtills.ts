@@ -1,6 +1,4 @@
 export const roles = {
-    admin: 'Администратор',
-    owner: 'Владелец',
-    pilot: 'Пилот',
-    dispatcher: 'Диспетчер',
+    admin: 'Админ',
+    customer: 'Заказчик',
 }

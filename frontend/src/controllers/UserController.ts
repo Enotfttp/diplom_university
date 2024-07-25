@@ -1,9 +1,10 @@
 import { deleteRequest, getRequest, putRequest } from "../axios/http";
 
 export const getEmployees = async () => {
-    const data = await getRequest("/api/employees");
+    const data = await getRequest("/api/users");
     if (data) {
         const id = localStorage.getItem("id");
+        console.log('data = ', data);
         const res = data.filter((el: any) => el.id !== Number(id));
         return res;
     } else {
@@ -22,7 +23,7 @@ export const getRoles = async () => {
 };
 
 export const deleteEmployee = async (id: string) => {
-    const data = await deleteRequest(`/api/employee/delete/${id}`, {}, { id });
+    const data = await deleteRequest(`/api/user/delete/${id}`, {}, { id });
     if (data) {
         return data;
     } else {
@@ -31,7 +32,7 @@ export const deleteEmployee = async (id: string) => {
 };
 
 export const editEmployee = async (id: string, fio: string, idRole: number, phoneNumber: number) => {
-    const data = await putRequest(`/api/employee/edit/${id}`, {}, { id, fio, idRole, phoneNumber });
+    const data = await putRequest(`/api/user/edit/${id}`, {}, { id, fio, idRole, phoneNumber });
     if (data) {
         return data;
     } else {
